@@ -49,8 +49,6 @@
                         subject: todo.value,
                         complete: false
                     });
-
-
                 }
                 todo.value = '';
             };

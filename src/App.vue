@@ -1,74 +1,71 @@
 <template>
+  <!-- 상단메뉴 -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+      <router-link class="nav-link" :to="{name: 'Home'}">Home</router-link>
+      <router-link class="nav-link" :to="{name: 'Todos'}">Todos</router-link>
+      <router-link class="nav-link" :to="{name: 'About'}">About</router-link>
+      <router-link class="nav-link" :to="{name:'Profile'}">Profile</router-link>      
+    </div>
+  </nav>
+
+
+  <!-- 라우터 화면 보여주기 -->
   <div class="container">
-    <h1>TODO LIST</h1>
-    <!-- 할일 추가 입력창 -->
-    <TodoSimpleForm v-on:add-todo="addTodo" />
+    <router-view 
+      @update-todo-toast="updateTodo"  
+      @new-todo-toast="newTodo" 
+    />
 
-    <!-- 목록없음 안내창 -->
-    <div v-show="!todos.length" class="red">생성된 Todo 목록이 없습니다.</div>
+    
+    <!-- 안내창 -->
+    <ToastBox v-if="showToast" :message="toastMessage" :type="toastAlertType" />
 
-    <!-- todo 목록창 -->
-    <TodoList v-bind:todos="todos" v-on:toggle-todo="toggleTodo" v-on:delete-todo="deleteTodo"/>
 
   </div>
+
 </template>
 
 <script>
-  import {
-    ref
-  } from 'vue';
 
-  import TodoSimpleForm from './components/TodoSimpleForm.vue'
-  import TodoList from './components/TodoList.vue'
+  import ToastBox from '@/components/ToastBox.vue';
+  import { useToast } from '@/composables/toast.js';
+
 
   export default {
-
     components: {
-      TodoSimpleForm,
-      TodoList
+      ToastBox
     },
     setup() {
-      // 할일 목록(배열)을 저장
-      const todos = ref([
-        {id:1, subject:'할일', complete: false}
-      ]);
-
-      // TodoSimpleForm 에서  
-      // add-todo 이벤트로 전달된 객체를 
-      // 처리해 주는 콜백함수 
-      const addTodo = (추가되는할일) => {
-        todos.value.push(추가되는할일);
+      const updateTodo = () => {
+        console.log('업데이트');
+        triggerToast("목록이 업데이트 되었습니다.", 'success');
       };
-
-      const toggleTodo = (index) => {
-        // console.log('원본 : ' + todos.value[index].complete);
-        todos.value[index].complete = !todos.value[index].complete;
-        // console.log('변경 : ' + todos.value[index].complete);
-      }
-
-      const deleteTodo = (index) => {
-        // console.log('지우기' + index);
-        // 배열내에서 순서번호로 부터 1개 제거
-        todos.value.splice(index, 1);
-      }
+      const newTodo = () => {
+        console.log('새글등록');
+        triggerToast("새로운 글이 추가되었습니다.", 'success');
+      };
+      // ToastBox 관련
+      const {
+        showToast,
+        toastMessage,
+        triggerToast,
+        toastAlertType
+      } = useToast();
 
       return {
-        todos,
-        addTodo,
-        toggleTodo,
-        deleteTodo
+        updateTodo,
+        newTodo,
+
+        showToast,
+        toastMessage,
+        triggerToast,
+        toastAlertType
       }
     }
   }
 </script>
 
 <style>
-  .red {
-    color: red;
-  }
 
-  .todocss {
-    color: gray;
-    text-decoration: line-through;
-  }
 </style>
