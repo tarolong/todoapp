@@ -7,7 +7,9 @@
                 <div class="form-group">
                     <label>제목</label>
                     <input type="text" class="form-control" v-model="todo.subject">
-                    <div v-if="subjectError" style="color:red">{{ subjectError }}</div>
+                    
+                    <div v-if="subjectError" class="red-text bold-text">{{ subjectError }}</div>
+
                 </div>
             </div>
 
@@ -47,8 +49,10 @@
 
     </form>
     
-    <!-- 안내창 -->
-    <ToastBox v-if="showToast" :message="toastMessage" :type="toastAlertType"/>
+    <Transition  name="fade">
+        <!-- 안내창 -->
+        <ToastBox v-if="showToast" :message="toastMessage" :type="toastAlertType"/>
+    </Transition>
 
 </template>
 
@@ -217,4 +221,33 @@ export default {
 </script>
 
 <style>
+    .red-text {
+        color: red;
+    }
+</style>
+
+<style scoped>
+    .bold-text {
+        font-weight: 900;
+    }
+
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: all 0.5s ease;
+    }
+
+
+    .fade-enter-from,
+    .fade-leave-to {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+
+    .fade-enter-to,
+    .fade-leave-from {
+        opacity: 1;
+        transform: translateY(0px);
+    }
+
+
 </style>

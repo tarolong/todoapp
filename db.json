@@ -16,17 +16,6 @@
       "id": 8
     },
     {
-      "subject": "2",
-      "complete": false,
-      "id": 10
-    },
-    {
-      "subject": "ㅇㄴㄹㄴㅇㄹ",
-      "complete": false,
-      "body": "ㅇㄹㅇㄴㄹ",
-      "id": 12
-    },
-    {
       "data": {
         "subject": "산청홈페이지 반응형",
         "complete": false,
@@ -35,22 +24,10 @@
       "id": 20
     },
     {
-      "subject": "업데이트",
+      "subject": "오늘은 세미나 참석",
       "complete": false,
-      "body": "ㄴㅇㄹㄴㅇㄹ",
+      "body": "오늘은 세미나 참석",
       "id": 21
-    },
-    {
-      "subject": "gogo",
-      "complete": false,
-      "body": "새글",
-      "id": 22
-    },
-    {
-      "subject": "새로운 내용",
-      "complete": false,
-      "body": "",
-      "id": 23
     }
   ]
 }
