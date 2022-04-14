@@ -37,8 +37,16 @@
         </div>
     </div>
 
-    <!-- 경고창 -->
-    <ModalWin v-if="showModal" />
+    <teleport to="#modal">
+        <!-- 경고창 -->
+        <ModalWin 
+            v-if="showModal" 
+            @close="closeModal"
+            @delete="deleteTodo"
+        />
+    </teleport>
+
+
 </template>
 
 <script>
@@ -61,7 +69,6 @@
 
         emits: ['toggle-todo', 'delete-todo'],
 
-
         setup(props, {emit}){
 
             // 실제 삭제될 id를 보관해 둠
@@ -74,14 +81,24 @@
                 todoDeleteId.value = index;
             }
             
-
+            const closeModal = () => {
+                showModal.value = false;
+                todoDeleteId.value = null;
+            }
+            
             const router = useRouter();
             const toggleTodo = (index, event) => {
                 // console.log(index);
                 emit('toggle-todo', index, event.target.checked);
             };
-            const deleteTodo = (index) => {
-                emit('delete-todo', index);
+            const deleteTodo = () => { 
+                // 삭제 버튼 클릭시 보관해 
+                // 두었던 값(todoDeleteId.value)을 활용
+                // 해당하는 todo 의 id 값
+                emit('delete-todo', todoDeleteId.value);                
+                
+                showModal.value = false;
+                todoDeleteId.value = null;
             };
 
             // 클릭된 id 를 전달한다.
@@ -103,7 +120,8 @@
                 moveToPage,
 
                 showModal,
-                openModal
+                openModal,
+                closeModal
             }
         }
     }

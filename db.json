@@ -11,23 +11,12 @@
       "id": 7
     },
     {
-      "subject": "8",
-      "complete": true,
-      "id": 8
-    },
-    {
       "data": {
         "subject": "산청홈페이지 반응형",
         "complete": false,
         "body": "111111"
       },
       "id": 20
-    },
-    {
-      "subject": "오늘은 세미나 참석",
-      "complete": false,
-      "body": "오늘은 세미나 참석",
-      "id": 21
     }
   ]
 }

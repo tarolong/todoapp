@@ -199,7 +199,15 @@
       }
 
       const deleteTodo = async (index) => {
-        const id = todos.value[index].id;
+
+        // 아래 문장은 순서 번호를 이용해서 목록에서 id 를 추출
+        // 예전에는 index 는 순서 번호 였다.
+        // 아래는 id를 알아내기 위한 과정이었습니다.
+        // const id = todos.value[index].id;
+
+        // 직접 id 를 받아오는 경우        
+        const id = index;
+
         error.value = '';
         try {
           // 전체 삭제가 아니라 id와 같은 DB 를 삭제
