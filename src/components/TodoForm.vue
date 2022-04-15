@@ -4,13 +4,11 @@
         <div class="row">            
             <!-- 제목 수정 및 입력 창 -->
             <div class="col-6">
-                <div class="form-group">
-                    <label>제목</label>
-                    <input type="text" class="form-control" v-model="todo.subject">
-                    
-                    <div v-if="subjectError" class="red-text bold-text">{{ subjectError }}</div>
-
-                </div>
+                <InputView
+                    label="제목"
+                    :err="subjectError"
+                    v-model:subject="todo.subject"                     
+                />
             </div>
 
             <!-- 상태 수정 창 -->
@@ -59,15 +57,17 @@
 <script>
 import { useRoute, useRouter } from 'vue-router';
 import axios from 'axios';
-import {computed, ref} from 'vue';
+import {computed, ref, onUpdated} from 'vue';
 import _ from 'lodash';
 import ToastBox from '@/components/ToastBox.vue';
 import { useToast } from '@/composables/toast.js';
+import InputView from '@/components/InputView.vue'
 
 export default {
 
     components: {
-        ToastBox
+        ToastBox,
+        InputView
     },
     props: {
         editing: {
@@ -76,7 +76,11 @@ export default {
         }
     },
     emits: ['update-todo', 'new-todo'],
-    setup(props, {emit}) {   
+    setup(props, {emit}) {  
+
+        onUpdated( () => {
+            // console.log(todo.value.subject);
+        });
 
         const route = useRoute();
         const router = useRouter();
@@ -102,8 +106,8 @@ export default {
             toastMessage,
             triggerToast,
             toastAlertType
-        } = useToast();    
-
+        } = useToast();  
+        
         const getTodo = async () => {
             // 내용을 가지고 올때 로딩 보여주고
             loading.value = true;
@@ -221,15 +225,9 @@ export default {
 </script>
 
 <style>
-    .red-text {
-        color: red;
-    }
 </style>
 
 <style scoped>
-    .bold-text {
-        font-weight: 900;
-    }
 
     .fade-enter-active,
     .fade-leave-active {
