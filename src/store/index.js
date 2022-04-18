@@ -23,7 +23,7 @@ export default createStore({
         }
     },
     actions: {
-        triggerToast( { commit }, message, type="success") {            
+        triggerToast( { commit }, {message, type} ) {            
             commit('UPDATE_TOAST_STATUS', true);
             commit('UPDATE_TOAST_MESSAGE', message);
             commit('UPDATE_TOAST_ALERT_TYPE', type);
