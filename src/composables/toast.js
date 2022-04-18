@@ -1,33 +1,24 @@
-import {ref, onUnmounted} from 'vue'
+import { computed } from 'vue'
+import {  useStore } from 'vuex'
 
 export const useToast = () => {
+    const store = useStore();
+
     // toastBox 관련
-    const showToast = ref(false); // 보이고 안보이고
-    const toastMessage = ref(''); // 메시지
-    const toastAlertType = ref(''); // Alert 타입 종류
+    // vuex 의 state 접근시 ref 로 설정시 즉시 반영 안됨
+    // computed 로 접근해서 변경된 값을 참조합니다.
+    const showToast = computed(() => store.state.showToast);
+    const toastMessage = computed(() => store.state.toastSmileMessage);
+    const toastAlertType = computed(() => store.state.toastAlertType);
     // 메시지가 전달되면 toastBox 보여주기
     const triggerToast = (message = '', type = 'success') => {
-        toastMessage.value = message;
-        showToast.value = true;
-        toastAlertType.value = type;
-
-        toastTimeout.value = setTimeout(() => {
-            toastMessage.value='';
-            toastAlertType.value = '';
-            showToast.value = false;
-        }, 3000)
+        store.dispatch('triggerToast', message, type);
     }
-     // 컴포넌트 해제
-     const toastTimeout = ref(null);
-     onUnmounted( () => { 
-         // 타이머 실행을 막아준다. 메모리 절약  
-         clearTimeout(toastTimeout);
-     });
 
-     return  {
+    return {
         showToast,
         toastMessage,
         triggerToast,
         toastAlertType
-     }
+    }
 }

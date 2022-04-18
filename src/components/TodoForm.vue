@@ -64,7 +64,6 @@ import _ from 'lodash';
 import ToastBox from '@/components/ToastBox.vue';
 import { useToast } from '@/composables/toast.js';
 import InputView from '@/components/InputView.vue'
-import { getCurrentInstance } from 'vue'
 
 export default {
 
@@ -78,9 +77,9 @@ export default {
             default: false
         }
     },
-    emits: ['update-todo', 'new-todo'],
+    
     setup(props) { 
-        const { emit } = getCurrentInstance();             
+        
         onUpdated( () => {
             // console.log(todo.value.subject);
         });
@@ -178,24 +177,24 @@ export default {
                     // console.log(res);
                     // 원본이 갱신 되었으므로 이를 반영하여 새로 저장해 줌.
                     originalTodo.value = { ...res.data };
-                    emit('update-todo', {});
-
                     triggerToast('데이터 업데이트에 성공하였습니다.', 'success');
                 }else{
                     // 신규 등록인 경우
                     res = await axios.post(`todos`, data);
-                    emit('new-todo', {});
+
+                    // 제목, 내용을 비운다.
+                    todo.value.subject = '';
+                    todo.value.body = '';
 
                     triggerToast('데이터 저장에 성공하였습니다.', 'success');
-                }                
-
-                //  제목, 내용을 비운다.
-                todo.value.subject = '';
-                todo.value.body = '';
-                // 목록으로 돌아간다.
-                router.push({
-                        name: 'Todos'
-                });
+                }
+                
+                // 신규등록인 경우에만 목록으로 돌아간다.
+                if(!props.editing) {
+                    router.push({
+                            name: 'Todos'
+                    });
+                }
 
             } catch(error) {
                 console.log(error);
