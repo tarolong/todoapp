@@ -40,7 +40,9 @@
     ref,
     watch
   } from 'vue';
-  import axios from 'axios'
+  // import axios from 'axios'
+  import axios from '@/axios.js'
+
   import TodoList from '@/components/TodoList.vue'
   import AppTitle from '@/components/AppTitle.vue'
   import ErrorBox from '@/components/ErrorBox.vue'
@@ -132,7 +134,7 @@
           // 서버에서 자료를 요청을 진행 후에 결과를 
           // res 에서 받는다. (response)
           const res = await axios.get(
-            `http://localhost:3000/todos?subject_like=${searchText.value}&_page=${page}&_limit=${limit}&_sort=id&_order=desc`
+            `todos?subject_like=${searchText.value}&_page=${page}&_limit=${limit}&_sort=id&_order=desc`
           );
           // console.log(res.headers)
           // 총 todos 개수 파악
@@ -164,7 +166,7 @@
         error.value = '';
         try {
           // 데이터 베이스에 저장이 되어야 하는 데이터
-          await axios.post('http://localhost:3000/todos', {
+          await axios.post('todos', {
             subject: 추가되는할일.subject,
             complete: 추가되는할일.complete
           });
@@ -183,7 +185,7 @@
         const id = todos.value[index].id;
         try {
           // 서버의 DB 를 업데이트 한다.
-          await axios.patch('http://localhost:3000/todos/' + id, {
+          await axios.patch('todos/' + id, {
             complete: checked
           });
           // 웹브라우저의 todo 의 화면을 표현한다.
@@ -211,7 +213,7 @@
         error.value = '';
         try {
           // 전체 삭제가 아니라 id와 같은 DB 를 삭제
-          await axios.delete('http://localhost:3000/todos/' + id);
+          await axios.delete('todos/' + id);
           
           triggerToast("목록을 삭제하였습니다.", 'success');
           
