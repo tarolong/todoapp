@@ -45,12 +45,8 @@
 
         <button class="btn btn-outline-dark ml-2" @click="moveBack" type="button">취소</button>
 
-    </form>
+    </form>   
     
-    <Transition  name="fade">
-        <!-- 안내창 -->
-        <ToastBox v-if="showToast" :message="toastMessage" :type="toastAlertType"/>
-    </Transition>
 
 </template>
 
@@ -58,17 +54,13 @@
 import { useRoute, useRouter } from 'vue-router';
 // import axios from 'axios';
 import axios from '@/axios.js'
-
 import {computed, ref, onUpdated} from 'vue';
 import _ from 'lodash';
-import ToastBox from '@/components/ToastBox.vue';
+
 import { useToast } from '@/composables/toast.js';
 import InputView from '@/components/InputView.vue'
-
 export default {
-
-    components: {
-        ToastBox,
+    components: {       
         InputView
     },
     props: {
@@ -83,7 +75,6 @@ export default {
         onUpdated( () => {
             // console.log(todo.value.subject);
         });
-
         const route = useRoute();
         const router = useRouter();
         // 현재 진행 및 수정 중인 todo 정보를 저장하고 있는 객체
@@ -92,10 +83,8 @@ export default {
             complete: false,
             body: ''
         });
-
         // 원래 가지고 있었던 todo 저장를 저장하고 있는 객체
         const originalTodo = ref(null);
-
         // 내용을 가지고 올때만(편집) 활용
         const loading = ref(false);
         
@@ -119,7 +108,6 @@ export default {
                 originalTodo.value = { ...res.data};
                 // 결과가 오게 되면
                 loading.value = false;
-
             } catch(error) {
                 // 결과가 오게 되면
                 loading.value = false;
@@ -128,33 +116,26 @@ export default {
                 triggerToast('서버에서 자료를 호출하는데 실패하였습니다.', 'danger');
             }
         }
-
         // todo 객체와 origialTodo를 비교한다.
         // 늘 비교한다.
         const todoUpdate = computed( () => {
             return _.isEqual(todo.value, originalTodo.value);
         });
-
         // 편집이라면 아래 구문을 실행한다.
         if(props.editing) {
             getTodo();
         }    
-
         const toggleTodoState = () => {
             todo.value.complete = !todo.value.complete
         }
-
         const moveBack = () => { 
             router.push({
                 name: 'Todos' 
             });
         }
-
         // 제목 미 입력시 경고 내용
         const subjectError = ref('');
-
         const onSave = async () => {
-
             subjectError.value = '';
             // 만약에 제목이 없으면 등록 및 편집 불가
             if(!todo.value.subject) {
@@ -162,7 +143,6 @@ export default {
                 triggerToast('제목을 입력하세요.', 'danger');
                 return;
             }
-
             try {
                 let res;
                 const data = {
@@ -170,7 +150,6 @@ export default {
                     complete: todo.value.complete,
                     body: todo.value.body
                 }
-
                 if(props.editing) {
                     // 편집으로 진입한 경우
                     res = await axios.put(`todos/${todoId}`, data);
@@ -181,11 +160,9 @@ export default {
                 }else{
                     // 신규 등록인 경우
                     res = await axios.post(`todos`, data);
-
                     // 제목, 내용을 비운다.
                     todo.value.subject = '';
                     todo.value.body = '';
-
                     triggerToast('데이터 저장에 성공하였습니다.', 'success');
                 }
                 
@@ -195,7 +172,6 @@ export default {
                             name: 'Todos'
                     });
                 }
-
             } catch(error) {
                 console.log(error);
                 if(props.editing) {
@@ -205,7 +181,6 @@ export default {
                 }                
             }
         };
-
         return {
             todo,
             loading,
@@ -213,41 +188,15 @@ export default {
             moveBack,
             onSave,
             todoUpdate,
-
             showToast,
             toastMessage,
             triggerToast,
             toastAlertType,
-
             subjectError
         }
-
     }
 }
 </script>
 
 <style>
-</style>
-
-<style scoped>
-
-    .fade-enter-active,
-    .fade-leave-active {
-        transition: all 0.5s ease;
-    }
-
-
-    .fade-enter-from,
-    .fade-leave-to {
-        opacity: 0;
-        transform: translateY(-30px);
-    }
-
-    .fade-enter-to,
-    .fade-leave-from {
-        opacity: 1;
-        transform: translateY(0px);
-    }
-
-
 </style>
